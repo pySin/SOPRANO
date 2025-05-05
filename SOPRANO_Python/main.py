@@ -12,7 +12,9 @@ def caller():
     print(f"Mutations path: {mf_path}")
 
     on_mut = in_imnpptd_mut.OnMutations(mf_path, if_path)
-    on_mut.open_mutations_file()
+    # on_mut.on_immunopeptidome_data()
+    # on_mut.on_mutations_data()
+    on_mut.mut_imnpptd_match()
 
 
 if __name__ == "__main__":
