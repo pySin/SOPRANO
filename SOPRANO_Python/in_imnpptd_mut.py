@@ -8,8 +8,16 @@ class OnMutations:
 
     def open_mutations_file(self):
 
-        # TODO make sure the file is proper befor opening
-        with open(self.mutations_file, "r") as mf:
+        # TODO make sure the file is proper before opening
+        with open(self.mutations_file, "r", encoding="UTF8") as mf:
             print(f"Mutations File: {mf}")
+
+            r = 0
+            for line in mf.readlines():
+                r += 1
+                if r == 10:
+                    break
+                print(f"Read Line: {line}")
+
 
 
