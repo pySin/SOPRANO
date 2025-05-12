@@ -52,8 +52,11 @@ class OnMutations:
         synonymous_mutations = mutation_variants.count("synonymous_variant")
         non_synonymous_mutations = mutation_variants.count("missense_variant")
 
-        print(f"synonymous_mutations: {synonymous_mutations}")
-        print(f"non_synonymous_mutations: {non_synonymous_mutations}")
+        print(f"synonymous_mutations: {synonymous_mutations} - label 'synonymous_variant'")
+        print(f"non_synonymous_mutations: {non_synonymous_mutations} - label 'missense_variant'")
+
+        ratio = non_synonymous_mutations / len(mutation_variants)
+        print(f"Ratio Non-Synonymous to Synonymous: {ratio}")
 
 
 
