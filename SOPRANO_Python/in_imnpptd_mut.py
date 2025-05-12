@@ -5,8 +5,10 @@ class OnMutations:
     def __init__(self, mutations_file, immunopeptidome_file):
         self.mutations_file = mutations_file
         self.immunopeptidome_file = immunopeptidome_file
+        self.mutations_data = None
+        self.immunopeptidome_data = None
 
-    def on_mutations_data(self):
+    def mutations_data_calc(self):
 
         on_mut_data = []
 
@@ -20,21 +22,21 @@ class OnMutations:
         #         print(f"Read Line: {line}")
         # print(f"On Mutations Data: {on_mut_data}")
         # print(f"On Mutations Data: {len(on_mut_data)}")
-        return on_mut_data
+        self.mutations_data = on_mut_data
 
-    def on_immunopeptidome_data(self):
+    def immunopeptidome_data_calc(self):
 
-        on_imnpptd_data = []
+        imnpptd_data = []
 
         with open(self.immunopeptidome_file, "r", encoding="UTF8") as i_file:
             for line in i_file.readlines():
-                on_imnpptd_data.append(line.strip().split("	"))
-        # print(f"In Immunopeptidome data: {on_imnpptd_data}")
-        return on_imnpptd_data
+                imnpptd_data.append(line.strip().split("	"))
+        # print(f"In Immunopeptidome data: {imnpptd_data}")
+        self.immunopeptidome_data = imnpptd_data
 
     def mut_imnpptd_match(self):
-        mut_trans_ids = [m_id[4] for m_id in self.on_mutations_data()][1:]
-        imm_trans_ids = [im[0] for im in self.on_immunopeptidome_data()]
+        mut_trans_ids = [m_id[4] for m_id in self.mutations_data][1:]
+        imm_trans_ids = [im[0] for im in self.immunopeptidome_data]
 
         # print(f"Mutation IDs count: {len(mut_trans_ids)}")
         # print(f"First Mutations records: {mut_trans_ids[0:3]}")
@@ -47,7 +49,7 @@ class OnMutations:
         return match_trans_ids, non_match_trans_ids
 
     def all_dnds(self):
-        on_m_data = self.on_mutations_data()
+        on_m_data = self.mutations_data
         # print(f"On DnDsData: {on_m_data}")
         mutation_variants = [mut_v[6] for mut_v in on_m_data][1:]
         # print(f"Mutations Variants: {mutation_variants}")
@@ -64,12 +66,50 @@ class OnMutations:
         # print(f"Ratio Non-Synonymous to Synonymous: {ratio}")
 
     def on_dnds(self):
-        on_imnpptd_mutations = self.mut_imnpptd_match()[0]
-        print(f"Mutations from the Immunopeptidome: {on_imnpptd_mutations}")
-        print(f"Count On-Mutations: {len(on_imnpptd_mutations)}")
+        on_imnpptd_mutations_ids = self.mut_imnpptd_match()[0]
+        # print(f"Mutations from the Immunopeptidome: {on_imnpptd_mutations_ids}")
+        # print(f"Count On-Mutations: {len(on_imnpptd_mutations_ids)}")
 
-        mutations_all_data = self.on_mutations_data()
+        mutations_all_data = self.mutations_data[1:]
+        # print(f"All data: {mutations_all_data}")
 
+        on_synonymous = 0
+        on_non_synonymous = 0
+
+        for i in range(len(mutations_all_data)):
+            if mutations_all_data[i][4] in on_imnpptd_mutations_ids:
+                if mutations_all_data[i][6] == "synonymous_variant":
+                    on_synonymous += 1
+                elif mutations_all_data[i][6] == "missense_variant":
+                    on_non_synonymous += 1
+
+        print(f"ON Immunopeptidome.")
+        print(f"Synonymous and NON-Synonymous for Transcript_IDs that match in both files(.anno, .bed)")
+        print(f"ON Synonymous: {on_synonymous}")
+        print(f"ON NON Synonymous: {on_non_synonymous}")
+
+    def off_dnds(self):
+        on_imnpptd_mutations_ids = self.mut_imnpptd_match()[1]
+        # print(f"Mutations from the Immunopeptidome: {on_imnpptd_mutations_ids}")
+        # print(f"Count On-Mutations: {len(on_imnpptd_mutations_ids)}")
+
+        mutations_all_data = self.mutations_data[1:]
+        # print(f"All data: {mutations_all_data}")
+
+        on_synonymous = 0
+        on_non_synonymous = 0
+
+        for i in range(len(mutations_all_data)):
+            if mutations_all_data[i][4] in on_imnpptd_mutations_ids:
+                if mutations_all_data[i][6] == "synonymous_variant":
+                    on_synonymous += 1
+                elif mutations_all_data[i][6] == "missense_variant":
+                    on_non_synonymous += 1
+
+        print(f"OFF Immunopeptidome.")
+        print(f"Synonymous and NON-Synonymous for Transcript_IDs that match in both files(.anno, .bed)")
+        print(f"OFF Synonymous: {on_synonymous}")
+        print(f"OFF NON Synonymous: {on_non_synonymous}")
 
 
 
