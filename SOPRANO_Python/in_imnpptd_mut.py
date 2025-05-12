@@ -1,4 +1,5 @@
 # Handle mutations inside the immunopeptidome.
+import os
 
 class OnMutations:
 
@@ -7,6 +8,12 @@ class OnMutations:
         self.immunopeptidome_file = immunopeptidome_file
         self.mutations_data = None
         self.immunopeptidome_data = None
+        self.report_file = ""
+
+    def report_file_folder(self, file_name):
+        folder = "report_files"
+        os.makedirs(folder, exist_ok=True)
+        self.report_file = open(f"{folder}/{file_name}", "a")
 
     def mutations_data_calc(self):
 
@@ -45,6 +52,7 @@ class OnMutations:
         non_match_trans_ids = [match_id for match_id in mut_trans_ids if match_id not in imm_trans_ids]
         # print(f"Match Trans: {match_trans_ids}")
         # print(f"Matches Length: {len(match_trans_ids)}")
+        self.report_file.write(f"Matches Length: {len(match_trans_ids)}\n")
         # print(f"Non_Matches Length: {len(non_match_trans_ids)}")
         return match_trans_ids, non_match_trans_ids
 
