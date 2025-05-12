@@ -15,6 +15,7 @@ def caller():
     # on_mut.on_immunopeptidome_data()
     # on_mut.on_mutations_data()
     on_mut.mut_imnpptd_match()
+    on_mut.all_dnds()
     on_mut.on_dnds()
 
 

@@ -33,30 +33,44 @@ class OnMutations:
         return on_imnpptd_data
 
     def mut_imnpptd_match(self):
-        mut_trans_ids = [m_id[4] for m_id in self.on_mutations_data()]
+        mut_trans_ids = [m_id[4] for m_id in self.on_mutations_data()][1:]
         imm_trans_ids = [im[0] for im in self.on_immunopeptidome_data()]
 
-        # print(f"Mutation IDs: {mut_trans_ids}")
+        # print(f"Mutation IDs count: {len(mut_trans_ids)}")
+        # print(f"First Mutations records: {mut_trans_ids[0:3]}")
         # print(f"Immunopeptidome IDs: {imm_trans_ids}")
         match_trans_ids = [match_id for match_id in mut_trans_ids if match_id in imm_trans_ids]
+        non_match_trans_ids = [match_id for match_id in mut_trans_ids if match_id not in imm_trans_ids]
         # print(f"Match Trans: {match_trans_ids}")
         # print(f"Matches Length: {len(match_trans_ids)}")
+        # print(f"Non_Matches Length: {len(non_match_trans_ids)}")
+        return match_trans_ids, non_match_trans_ids
 
-    def on_dnds(self):
+    def all_dnds(self):
         on_m_data = self.on_mutations_data()
-        print(f"On DnDsData: {on_m_data}")
+        # print(f"On DnDsData: {on_m_data}")
         mutation_variants = [mut_v[6] for mut_v in on_m_data][1:]
-        print(f"Mutations Variants: {mutation_variants}")
-        print(f"Mutations Count: {len(mutation_variants)}")
+        # print(f"Mutations Variants: {mutation_variants}")
+        # print(f"Mutations Count: {len(mutation_variants)}")
 
         synonymous_mutations = mutation_variants.count("synonymous_variant")
         non_synonymous_mutations = mutation_variants.count("missense_variant")
 
-        print(f"synonymous_mutations: {synonymous_mutations} - label 'synonymous_variant'")
-        print(f"non_synonymous_mutations: {non_synonymous_mutations} - label 'missense_variant'")
+        # To Do: Transfer these prints to a file.
+        # print(f"synonymous_mutations count: {synonymous_mutations} -     label 'synonymous_variant'")
+        # print(f"non_synonymous_mutations count: {non_synonymous_mutations} -     label 'missense_variant'")
 
         ratio = non_synonymous_mutations / len(mutation_variants)
-        print(f"Ratio Non-Synonymous to Synonymous: {ratio}")
+        # print(f"Ratio Non-Synonymous to Synonymous: {ratio}")
+
+    def on_dnds(self):
+        on_imnpptd_mutations = self.mut_imnpptd_match()[0]
+        print(f"Mutations from the Immunopeptidome: {on_imnpptd_mutations}")
+        print(f"Count On-Mutations: {len(on_imnpptd_mutations)}")
+
+        mutations_all_data = self.on_mutations_data()
+
+
 
 
 
