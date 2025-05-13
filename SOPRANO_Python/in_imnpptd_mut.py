@@ -9,6 +9,9 @@ class OnMutations:
         self.mutations_data = None
         self.immunopeptidome_data = None
         self.report_file = ""
+        self.match_transcript_ids = None
+        self.non_match_trans_ids = None
+
 
     def report_file_folder(self, file_name):
         folder = "report_files"
@@ -54,6 +57,10 @@ class OnMutations:
         # print(f"Matches Length: {len(match_trans_ids)}")
         self.report_file.write(f"Matches Length: {len(match_trans_ids)}\n")
         # print(f"Non_Matches Length: {len(non_match_trans_ids)}")
+
+        self.match_transcript_ids = match_trans_ids
+        self.non_match_trans_ids = non_match_trans_ids
+
         return match_trans_ids, non_match_trans_ids
 
     def all_dnds(self):
@@ -74,7 +81,7 @@ class OnMutations:
         # print(f"Ratio Non-Synonymous to Synonymous: {ratio}")
 
     def on_dnds(self):
-        on_imnpptd_mutations_ids = self.mut_imnpptd_match()[0]
+        on_imnpptd_mutations_ids = self.match_transcript_ids
         # print(f"Mutations from the Immunopeptidome: {on_imnpptd_mutations_ids}")
         # print(f"Count On-Mutations: {len(on_imnpptd_mutations_ids)}")
 
@@ -97,7 +104,7 @@ class OnMutations:
         print(f"ON NON Synonymous: {on_non_synonymous}")
 
     def off_dnds(self):
-        on_imnpptd_mutations_ids = self.mut_imnpptd_match()[1]
+        on_imnpptd_mutations_ids = self.non_match_trans_ids
         # print(f"Mutations from the Immunopeptidome: {on_imnpptd_mutations_ids}")
         # print(f"Count On-Mutations: {len(on_imnpptd_mutations_ids)}")
 
