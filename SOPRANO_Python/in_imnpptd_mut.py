@@ -55,7 +55,15 @@ class OnMutations:
         non_match_trans_ids = [match_id for match_id in mut_trans_ids if match_id not in imm_trans_ids]
         # print(f"Match Trans: {match_trans_ids}")
         # print(f"Matches Length: {len(match_trans_ids)}")
-        self.report_file.write(f"Matches Length: {len(match_trans_ids)}\n")
+
+        # Add the mutations file to record. Remove the folder name 1st 11 symbols.
+        self.report_file.write(f"\n-----------------+-----------------\n")
+        self.report_file.write(f"Mutations file: {self.mutations_file[11:]}\n")
+        self.report_file.write(f"Immunopeptidome file: {self.immunopeptidome_file[11:]}\n")
+
+        self.report_file.write(f"All mutations: {len(mut_trans_ids)}\n")
+        self.report_file.write(f"Mutations ON the immunopeptidome: {len(match_trans_ids)}\n")
+        self.report_file.write(f"Mutations OFF the immunopeptidome: {len(non_match_trans_ids)}\n")
         # print(f"Non_Matches Length: {len(non_match_trans_ids)}")
 
         self.match_transcript_ids = match_trans_ids
@@ -64,18 +72,21 @@ class OnMutations:
         return match_trans_ids, non_match_trans_ids
 
     def all_dnds(self):
-        on_m_data = self.mutations_data
+        m_data = self.mutations_data
         # print(f"On DnDsData: {on_m_data}")
-        mutation_variants = [mut_v[6] for mut_v in on_m_data][1:]
+        mutation_variants = [mut_v[6] for mut_v in m_data][1:]
         # print(f"Mutations Variants: {mutation_variants}")
         # print(f"Mutations Count: {len(mutation_variants)}")
 
         synonymous_mutations = mutation_variants.count("synonymous_variant")
         non_synonymous_mutations = mutation_variants.count("missense_variant")
 
-        # To Do: Transfer these prints to a file.
-        # print(f"synonymous_mutations count: {synonymous_mutations} -     label 'synonymous_variant'")
-        # print(f"non_synonymous_mutations count: {non_synonymous_mutations} -     label 'missense_variant'")
+        self.report_file.write(f"\n -----------------------------------------------------\n\n")
+        self.report_file.write(f"All data Non-Synonymous to Synonymous comparison.\n")
+        self.report_file.write(f"Non-Synonymous Mutations: {non_synonymous_mutations}\n")
+        self.report_file.write(f"Synonymous Mutations: {synonymous_mutations}\n")
+        dn_ds_ratio = non_synonymous_mutations / len(mutation_variants)
+        self.report_file.write(f"Non-Synonymous to Synonymous mutations ratio: {dn_ds_ratio}\n")
 
         ratio = non_synonymous_mutations / len(mutation_variants)
         # print(f"Ratio Non-Synonymous to Synonymous: {ratio}")
